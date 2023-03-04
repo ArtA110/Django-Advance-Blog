@@ -1,2 +1,2 @@
 # Django-Advance-Blog
- Maktabkhoone django
+This is an educational project for educational purpose only!
