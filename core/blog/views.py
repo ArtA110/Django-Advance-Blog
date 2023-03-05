@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
-from django.views.generic import TemplateView, RedirectView, ListView
+from django.views.generic import TemplateView, RedirectView, ListView, DetailView
 # Create your views here.
 def fbv_view(request):
     return render(request,'index.html')
@@ -22,8 +22,16 @@ class RedirectToGoogle(RedirectView):
         print(post.content)
         return super().get_redirect_url(*args, **kwargs)
 
-class PostList(ListView):
+class PostListView(ListView):
+    # We can use queryset var here instead of def get_queryset for custom queries!
+    model = Post
     context_object_name = 'posts'
+    paginate_by = 2
+    ordering = '-id'
+    # Because we don't inherit below code ordering will overwrite!
+    # def get_queryset(self):
+    #     posts = Post.objects.filter(status=True)
+    #     return posts
 
-    def get_queryset(self):
-        return Post.objects.filter(status=True)
+class PostDetailView(DetailView):
+    model = Post
