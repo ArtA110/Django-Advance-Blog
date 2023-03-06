@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
-from django.views.generic import TemplateView, RedirectView, ListView, DetailView, CreateView
+from django.views.generic import TemplateView, RedirectView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import PostForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Create your views here.
 def fbv_view(request):
     return render(request,'index.html')
@@ -23,8 +24,9 @@ class RedirectToGoogle(RedirectView):
         print(post.content)
         return super().get_redirect_url(*args, **kwargs)
 
-class PostListView(ListView):
+class PostListView(PermissionRequiredMixin, ListView):
     # We can use queryset var here instead of def get_queryset for custom queries!
+    permission_required = 'blog.view_post'
     model = Post
     context_object_name = 'posts'
     paginate_by = 2
@@ -34,7 +36,7 @@ class PostListView(ListView):
     #     posts = Post.objects.filter(status=True)
     #     return posts
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
 '''
 class PostCreateView(FormView):
@@ -46,7 +48,7 @@ class PostCreateView(FormView):
         form.save()
         return super().form_valid(form)
 '''
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     success_url = '/blog/posts/'
     model = Post
@@ -54,3 +56,12 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+class PostEditView(LoginRequiredMixin, UpdateView):
+    form_class = PostForm
+    model = Post
+    success_url = '/blog/posts/'
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = '/blog/posts/'
