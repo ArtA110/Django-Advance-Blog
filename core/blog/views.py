@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
-from django.views.generic import TemplateView, RedirectView, ListView, DetailView
+from django.views.generic import TemplateView, RedirectView, ListView, DetailView, CreateView
+from .forms import PostForm
 # Create your views here.
 def fbv_view(request):
     return render(request,'index.html')
@@ -35,3 +36,21 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+'''
+class PostCreateView(FormView):
+    template_name = 'contact.html'
+    form_class = PostForm
+    success_url = '/blog/posts/'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+'''
+class PostCreateView(CreateView):
+    form_class = PostForm
+    success_url = '/blog/posts/'
+    model = Post
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
