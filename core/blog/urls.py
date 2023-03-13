@@ -8,5 +8,7 @@ urlpatterns = [
     path('posts/<int:pk>/', views.PostDetailView.as_view(),name='post-detail'),
     path('posts/new/', views.PostCreateView.as_view(),name = 'post-create'),
     path('posts/<int:pk>/edit/', views.PostEditView.as_view(), name= 'edit-view'),
-    path('posts/<int:pk>/delete/', views.PostDeleteView.as_view(), name= 'delete-view')
+    path('posts/<int:pk>/delete/', views.PostDeleteView.as_view(), name= 'delete-view'),
+    # REST
+    path('post/', views.api_post_list_view, name='API-post-list')
 ]
