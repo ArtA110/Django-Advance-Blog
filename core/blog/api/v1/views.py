@@ -34,13 +34,13 @@ class PostDetail(APIView):
     def get(self, request, id):
         """ get post """
         post = get_object_or_404(Post, pk=id, status=1)
-        serializer = PostSerializer(post)
+        serializer = self.serializer_class(post)
         return Response(serializer.data)
 
     def put(self, request, id):
         """ update post """
         post = get_object_or_404(Post, pk=id, status=1)
-        serializer = PostSerializer(post, data=request.data)
+        serializer = self.serializer_class(post, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
