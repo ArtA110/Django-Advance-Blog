@@ -5,34 +5,49 @@ from .serializers import PostSerializer
 from blog.models import Post
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
+from rest_framework.views import APIView
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticatedOrReadOnly])
-def postList(request):
-    if request.method == 'GET':
+class PostList(APIView):
+    """show and add posts"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    def get(self, request):
+        """show all posts"""
         posts = get_list_or_404(Post, status=1)
-        posts = PostSerializer(posts, many=True)
-        return Response(posts.data)
-    elif request.method == 'POST':
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        """add a post"""
         serializer = PostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
-def postDetail(request, id):
-    post = get_object_or_404(Post, pk=id, status=1)
-    if request.method == 'GET':
-        post = PostSerializer(post)
-        return Response(post.data)
-    elif request.method == 'PUT':
+class PostDetail(APIView):
+    """ Show a Single post object plus editing and removing it """
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+
+    def get(self, request, id):
+        """ get post """
+        post = get_object_or_404(Post, pk=id, status=1)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        """ update post """
+        post = get_object_or_404(Post, pk=id, status=1)
         serializer = PostSerializer(post, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    elif request.method == 'DELETE':
+
+    def delete(self, request, id):
+        """ delete post """
+        post = get_object_or_404(Post, pk=id, status=1)
         post.delete()
         return Response({"detail": "post deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
