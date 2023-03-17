@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 #from django.contrib.auth import get_user_model
 # Create your models here.
 
@@ -14,6 +15,12 @@ class Post (models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     published_date = models.DateTimeField()
+
+    def get_snippet(self):
+        return self.content[:5]
+
+    def get_absolute_api_url(self):
+        return reverse('blog:api-v1:post-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.title

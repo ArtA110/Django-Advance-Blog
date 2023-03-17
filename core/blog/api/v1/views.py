@@ -53,7 +53,7 @@ class PostModelViewSet(ModelViewSet):
     """ CRUD for posts """
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-    queryset = get_list_or_404(Post, status=1)
+    queryset = Post.objects.filter(status=1)
 
 
 class CategoryModelViewSet(ModelViewSet):
