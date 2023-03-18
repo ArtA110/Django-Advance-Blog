@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
+from .permissions import IsOwnerOrReadOnly
 
 
 '''
@@ -51,7 +52,7 @@ class PostDetail(GenericAPIView):
 
 class PostModelViewSet(ModelViewSet):
     """ CRUD for posts """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=1)
 
