@@ -8,6 +8,10 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from .permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from .paginations import DefaultPagination
+from .filters import PostFilter
 
 
 '''
@@ -55,6 +59,11 @@ class PostModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=1)
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = PostFilter
+    search_fields = ['title', 'content']
+    ordering_fields = ['published_date', 'created_date']
+    pagination_class = DefaultPagination
 
 
 class CategoryModelViewSet(ModelViewSet):
