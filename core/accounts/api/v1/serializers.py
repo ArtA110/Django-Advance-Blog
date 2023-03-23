@@ -23,4 +23,4 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        return User.object.create_user(**validated_data)
+        return User.objects.create_user(**validated_data)
