@@ -12,6 +12,10 @@ from accounts.models import Profile
 from django.shortcuts import get_object_or_404
 from mail_templated import EmailMessage
 from ..utils import EmailThread
+from rest_framework_simplejwt.tokens import RefreshToken
+import jwt
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
+from django.conf import settings
 
 
 User = get_user_model()
@@ -24,11 +28,23 @@ class RegistrationApiView(GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            email = serializer.validated_data['email']
             data = {
-                'email': serializer.validated_data['email']
+                'email': email
             }
+            user = get_object_or_404(User, email=email)
+            token = self.get_tokens_for_user(user)
+            email_obj = EmailMessage('email/Activation.tpl', {'token': token}, 'ali.tabatabaeian16@gmail.com',
+                                     to=[email])
+            EmailThread(email_obj).start()
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+
+        return str(refresh.access_token)
+
 
 
 class CustomObtainAuthToken(ObtainAuthToken):
@@ -85,9 +101,19 @@ class ProfileApiView(RetrieveUpdateAPIView):
         return obj
 
 
-class TestEmailView(GenericAPIView):
-    def get(self, request, *args, **kwargs):
-        email_obj = EmailMessage('email/hello.tpl', {'name': 'ali'}, 'ali.tabatabaeian16@gmail.com',
-                               to=['test@test.com'])
-        EmailThread(email_obj).start()
-        return Response({'status': 'Email Sent!'})
+class ConfirmActivationApiView(APIView):
+    def get(self, request, token, *args, **kwargs):
+        try:
+            decode_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user_id = decode_token.get('user_id')
+        except ExpiredSignatureError:
+            return Response({'details': 'Your activation token has expired!'})
+        except InvalidTokenError:
+            return Response({'details': 'Your activation token is not valid!'})
+        user = get_object_or_404(User, pk=user_id)
+        if user.is_verified:
+            return Response({'details': 'You have been already verified!'})
+        user.is_verified = True
+        user.save()
+        return Response({'details': 'User have been verified'})
+
