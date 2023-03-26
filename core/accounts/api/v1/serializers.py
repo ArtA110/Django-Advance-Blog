@@ -56,3 +56,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['id', 'email', 'first_name', 'last_name', 'image', 'description']
+
+class ResendActivationSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        user = User.objects.get(email=email)
+        attrs['user'] = user
+        return super().validate(attrs)
+

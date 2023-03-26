@@ -117,3 +117,22 @@ class ConfirmActivationApiView(APIView):
         user.save()
         return Response({'details': 'User have been verified'})
 
+
+class ResendActivationApiView(GenericAPIView):
+    serializer_class = serializers.ResendActivationSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        if user.is_verified:
+            return Response({'details': 'Already verified'}, status=status.HTTP_400_BAD_REQUEST)
+        token = self.get_tokens_for_user(user)
+        email_obj = EmailMessage('email/Activation.tpl', {'token': token}, 'ali.tabatabaeian16@gmail.com',
+                                 to=[user.email])
+        EmailThread(email_obj).start()
+        return Response({'details': 'Email resend successfully'}, status=status.HTTP_200_OK)
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+
+        return str(refresh.access_token)
