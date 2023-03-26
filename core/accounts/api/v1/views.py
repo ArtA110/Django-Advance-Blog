@@ -10,6 +10,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 from accounts.models import Profile
 from django.shortcuts import get_object_or_404
+from mail_templated import send_mail
+
 
 User = get_user_model()
 
@@ -80,3 +82,9 @@ class ProfileApiView(RetrieveUpdateAPIView):
         queryset = self.get_queryset()
         obj = get_object_or_404(queryset, user=self.request.user)
         return obj
+
+
+class TestEmailView(GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        send_mail('email/hello.tpl', {'user': 'ali'}, 'ali.tabatabaeian16@gmail.com', ['test@test.com'])
+        return Response({'status': 'Email Sent!'})
