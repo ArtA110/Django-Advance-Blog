@@ -54,7 +54,9 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key, "email": user.email, "id": user.pk})
+        return Response(
+            {"token": token.key, "email": user.email, "id": user.pk}
+        )
 
 
 class CustomDiscardAuthToken(APIView):
@@ -89,7 +91,9 @@ class ChangePasswordApiView(GenericAPIView):
                     {"old_password": "wrong password"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            self.object.set_password(serializer.validated_data.get("new_password"))
+            self.object.set_password(
+                serializer.validated_data.get("new_password")
+            )
             self.object.save()
             return Response(
                 {"new_password": "password set successfully!"},
@@ -111,7 +115,9 @@ class ProfileApiView(RetrieveUpdateAPIView):
 class ConfirmActivationApiView(APIView):
     def get(self, request, token, *args, **kwargs):
         try:
-            decode_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            decode_token = jwt.decode(
+                token, settings.SECRET_KEY, algorithms=["HS256"]
+            )
             user_id = decode_token.get("user_id")
         except ExpiredSignatureError:
             return Response({"details": "Your activation token has expired!"})
@@ -134,7 +140,8 @@ class ResendActivationApiView(GenericAPIView):
         user = serializer.validated_data["user"]
         if user.is_verified:
             return Response(
-                {"details": "Already verified"}, status=status.HTTP_400_BAD_REQUEST
+                {"details": "Already verified"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         token = self.get_tokens_for_user(user)
         email_obj = EmailMessage(

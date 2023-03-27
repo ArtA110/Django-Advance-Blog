@@ -14,7 +14,14 @@ class CustomUserAdmin(UserAdmin):
         ("Authentication", {"fields": ("email", "password")}),
         (
             "Permissions",
-            {"fields": ("is_staff", "is_active", "is_superuser", "is_verified")},
+            {
+                "fields": (
+                    "is_staff",
+                    "is_active",
+                    "is_superuser",
+                    "is_verified",
+                )
+            },
         ),
         ("Group Permissions", {"fields": ("groups", "user_permissions")}),
         ("Important Dates", {"fields": ("last_login",)}),
@@ -23,7 +30,14 @@ class CustomUserAdmin(UserAdmin):
         ("Model Creation", {"fields": ("email", "password1", "password2")}),
         (
             "Boolean fields",
-            {"fields": ("is_staff", "is_active", "is_superuser", "is_verified")},
+            {
+                "fields": (
+                    "is_staff",
+                    "is_active",
+                    "is_superuser",
+                    "is_verified",
+                )
+            },
         ),
     )
 
