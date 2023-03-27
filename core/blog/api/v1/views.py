@@ -55,19 +55,21 @@ class PostDetail(GenericAPIView):
 
 
 class PostModelViewSet(ModelViewSet):
-    """ CRUD for posts """
+    """CRUD for posts"""
+
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=1)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = PostFilter
-    search_fields = ['title', 'content']
-    ordering_fields = ['published_date', 'created_date']
+    search_fields = ["title", "content"]
+    ordering_fields = ["published_date", "created_date"]
     pagination_class = DefaultPagination
 
 
 class CategoryModelViewSet(ModelViewSet):
-    """ CRUD for Category """
+    """CRUD for Category"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
