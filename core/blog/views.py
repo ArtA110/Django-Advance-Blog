@@ -39,9 +39,9 @@ class RedirectToGoogle(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostListView(PermissionRequiredMixin, ListView):
+class PostListView(ListView):
     # We can use queryset var here instead of def get_queryset for custom queries!
-    permission_required = "blog.view_post"
+    # permission_required = "blog.view_post"
     model = Post
     context_object_name = "posts"
     paginate_by = 2

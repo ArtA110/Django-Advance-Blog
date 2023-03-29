@@ -103,6 +103,7 @@ class ChangePasswordApiView(GenericAPIView):
 
 
 class ProfileApiView(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Profile.objects.all()
     serializer_class = serializers.ProfileSerializer
 
