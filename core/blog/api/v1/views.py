@@ -63,7 +63,7 @@ class PostDetail(GenericAPIView):
 class PostModelViewSet(ModelViewSet):
     """CRUD for posts"""
 
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=1)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
