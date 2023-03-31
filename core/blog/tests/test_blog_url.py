@@ -1,7 +1,8 @@
-from django.test import TestCase, SimpleTestCase
+from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import PostListView, PostDetailView
 # Create your tests here.
+
 
 class TestUrl(SimpleTestCase):
 

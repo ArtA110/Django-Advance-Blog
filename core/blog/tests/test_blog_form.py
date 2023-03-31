@@ -1,7 +1,8 @@
-from django.test import TestCase, SimpleTestCase
+from django.test import TestCase
 from ..forms import PostForm
 from datetime import datetime
 from ..models import Category
+
 
 class TestPostForm(TestCase):
 

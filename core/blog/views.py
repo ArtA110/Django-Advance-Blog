@@ -12,7 +12,6 @@ from django.views.generic import (
 from .forms import PostForm
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
-    PermissionRequiredMixin,
 )
 
 

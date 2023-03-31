@@ -1,4 +1,4 @@
-from django.urls import path
+# from django.urls import path
 from blog.api.v1 import views
 from rest_framework.routers import DefaultRouter
 

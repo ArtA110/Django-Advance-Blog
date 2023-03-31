@@ -3,6 +3,7 @@ from ..models import Post
 from datetime import datetime
 from accounts.models import User, Profile
 
+
 class TestModel(TestCase):
 
     def setUp(self):

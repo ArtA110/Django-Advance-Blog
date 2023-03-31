@@ -13,7 +13,7 @@ def api_client():
 
 @pytest.fixture()
 def common_user():
-    user = User.objects.create_user(email='test@test.ts', password='A@/123456', is_verified = True)
+    user = User.objects.create_user(email='test@test.ts', password='A@/123456', is_verified=True)
     return user
 
 
