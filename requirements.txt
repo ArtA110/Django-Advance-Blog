@@ -16,3 +16,4 @@ Faker
 django-cors-headers
 redis
 celery
+django-redis

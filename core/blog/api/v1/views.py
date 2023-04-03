@@ -2,12 +2,15 @@
 from rest_framework.permissions import (
     IsAuthenticated,
 )
+
 # from rest_framework.response import Response
 from .serializers import PostSerializer, CategorySerializer
 from blog.models import Post, Category
+
 # from django.shortcuts import get_object_or_404, get_list_or_404
 # from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+
 # from rest_framework.generics import (
 #     RetrieveUpdateDestroyAPIView,
 #     ListCreateAPIView,
