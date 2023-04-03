@@ -13,3 +13,4 @@ exclude =
 ignore =
     E501,
     W504,
+    W503,
